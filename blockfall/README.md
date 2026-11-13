@@ -53,3 +53,5 @@ See the [Vite GitHub Pages guide](https://vite.dev/guide/static-deploy.html#gith
 Open the deployed HTTPS URL in Safari. In the Share menu, choose **Add to Home Screen**, turn on **Open as Web App** if shown, and tap **Add**. Launch it from the Home Screen once while online so it can cache the game for offline play. After a new deployment, closing and reopening the app lets the updated service worker take over once older game tabs are closed.
 
 See [Apple's Home Screen web app guide](https://support.apple.com/en-gb/guide/iphone/iphea86e5236/ios).
+
+On a touch screen, drag horizontally anywhere on the board to move, tap the board to rotate, or swipe down to hard drop. Use the down button for a soft drop.

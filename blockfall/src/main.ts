@@ -44,6 +44,8 @@ let state: 'ready' | 'playing' | 'paused' | 'over' = 'ready'
 let lastFall = 0
 let repeat: { pointer: number; action: string; at: number } | undefined
 
+let gesture: { id: number; x: number; y: number; start: number; axis?: 'x' | 'y'; moved: boolean } | undefined
+
 function block(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, kind: Kind, ghost = false) {
   ctx.fillStyle = colors[kind]
   if (ghost) {
@@ -113,7 +115,10 @@ function updateState(focus = true) {
   start.textContent = canContinue ? 'Continue' : state === 'paused' ? 'Resume' : state === 'over' ? 'Play again' : 'Play'
   status.textContent = state === 'over' ? 'Game over' : state === 'paused' ? 'Paused' : 'Ready?'
   for (const button of controls) button.disabled = state !== 'playing'
-  if (state !== 'playing') repeat = undefined
+  if (state !== 'playing') {
+    repeat = undefined
+    gesture = undefined
+  }
   if (focus) (state === 'playing' ? pause : start).focus({ preventScroll: true })
   render()
 }
@@ -185,6 +190,9 @@ window.addEventListener('keydown', event => {
   event.preventDefault()
   if (!event.repeat || ['left', 'right', 'down'].includes(action)) act(action)
 })
+for (const surface of document.querySelectorAll('.controls, .gestures')) {
+  surface.addEventListener('contextmenu', event => event.preventDefault())
+}
 for (const button of controls) {
   const action = button.dataset.action!
   button.addEventListener('click', event => {
@@ -226,3 +234,47 @@ requestAnimationFrame(frame)
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Offline setup failed', error))
 }
+
+// Capture one finger on the board so a swipe can finish outside its edges.
+board.addEventListener('pointerdown', event => {
+  if (event.pointerType === 'mouse' || gesture || state !== 'playing') return
+  board.setPointerCapture(event.pointerId)
+  gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, start: performance.now(), moved: false }
+})
+board.addEventListener('pointermove', event => {
+  const drag = gesture
+  if (!drag || event.pointerId !== drag.id || state !== 'playing') return
+  const dx = event.clientX - drag.x
+  const dy = event.clientY - drag.y
+  const step = Math.max(14, board.clientWidth / WIDTH)
+  if (!drag.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= step * 0.65) {
+    drag.axis = Math.abs(dx) >= Math.abs(dy) ? 'x' : 'y'
+  }
+  if (drag.axis === 'x' && Math.abs(dx) >= step * 0.65) {
+    const count = Math.max(1, Math.round(Math.abs(dx) / step))
+    for (let i = 0; i < count; i++) act(dx < 0 ? 'left' : 'right')
+    drag.x = event.clientX
+    drag.moved = true
+  }
+})
+board.addEventListener('pointerup', event => {
+  const drag = gesture
+  if (!drag || drag.id !== event.pointerId) return
+  gesture = undefined
+  const dx = event.clientX - drag.x
+  const dy = event.clientY - drag.y
+  if (drag.axis !== 'x' && dy >= 30 && dy > Math.abs(dx)) act('drop')
+  else if (!drag.axis && !drag.moved && Math.hypot(dx, dy) < 12 &&
+    performance.now() - drag.start < 350) act('turn')
+})
+for (const type of ['pointercancel', 'lostpointercapture']) {
+  board.addEventListener(type, event => {
+    if ((event as PointerEvent).pointerId === gesture?.id) gesture = undefined
+  })
+}
+
+// Suppress Safari's native tap handling on the board. Pointer events
+// still drive rotation, movement and drops.
+board.addEventListener('touchend', event => {
+  if (event.cancelable) event.preventDefault()
+}, { passive: false })
