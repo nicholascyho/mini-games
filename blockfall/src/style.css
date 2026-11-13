@@ -1,0 +1,54 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  color: #f8f5ff;
+  background: #141227;
+  --cell: clamp(10px, min(calc((100svh - 180px) / 20), calc((100vw - 124px) / 10)), 28px);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at top, #2e2052, #141227 65%);
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+}
+main { width: max-content; max-width: 100%; margin: auto; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+h1 { margin: 0; font-size: clamp(1.55rem, 6vw, 2.4rem); letter-spacing: -.07em; }
+h1 span { color: #d0aaff; }
+button {
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  border: 1px solid #6a578c;
+  border-radius: 10px;
+  background: #302449;
+  min-height: 44px;
+  padding: 0 10px;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+button:active { background: #654894; }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible { outline: 2px solid #e4caff; outline-offset: 3px; }
+.playfield { display: grid; grid-template-columns: calc(var(--cell) * 10) minmax(74px, 90px); gap: 8px; }
+.well { position: relative; border-radius: 8px; overflow: hidden; outline: 1px solid #645581; }
+canvas { display: block; width: 100%; }
+aside { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.card {
+  background: #211a36; border: 1px solid #483963; border-radius: 8px;
+  padding: 4px 6px; color: #ded0f6; font-size: .78rem;
+}
+.card strong { display: block; color: #fff; font-size: clamp(.8rem, 3.8vw, 1rem); overflow-wrap: anywhere; }
+#next { max-height: 54px; object-fit: contain; }
+#overlay {
+  position: absolute; inset: 0; display: grid; place-content: center; gap: 12px;
+  text-align: center; padding: 6px; background: #100d20dd;
+}
+#overlay[hidden] { display: none; }
+#start { background: #d0aaff; color: #211434; }
+.controls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 10px; }
+.controls button { min-width: 0; padding: 0 3px; user-select: none; -webkit-touch-callout: none; }
+.keys { text-align: center; color: #d5c8ea; font-size: .74rem; margin: 8px 0 0; max-width: calc(var(--cell) * 10 + 98px); }
+@media (hover: none) { .keys { display: none; } }

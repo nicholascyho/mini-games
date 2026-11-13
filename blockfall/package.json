@@ -1,0 +1,19 @@
+{
+  "name": "blockfall",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/offline.mjs",
+    "preview": "vite preview",
+    "test": "tsc src/game.ts --target ES2022 --module ES2022 --strict --outDir .test-build && node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "vite": "6.4.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
