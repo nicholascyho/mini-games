@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#141227">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="icon" href="./icon-192.png">
+  <title>Blockfall</title>
+  <script type="module" crossorigin src="./assets/index-CMrdjUd4.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-Bd-j5Tqn.css">
+</head>
+<body>
+  <main>
+    <header><h1>Block<span>fall</span></h1><button id="pause" disabled>Pause</button></header>
+    <div class="playfield">
+      <div class="well">
+        <canvas id="board" width="300" height="600" aria-label="10 by 20 game board"></canvas>
+        <div id="overlay">
+          <strong id="status" role="status">Ready?</strong>
+          <button id="start">Play</button>
+          <button id="new-game" hidden>New Game</button>
+        </div>
+      </div>
+      <aside aria-label="Game stats">
+        <div class="card">Next<canvas id="next" width="96" height="72" aria-label="Next piece"></canvas></div>
+        <div class="card">Score<strong id="score">0</strong></div>
+        <div class="card">Best<strong id="best">0</strong></div>
+        <div class="card">Level<strong id="level">1</strong></div>
+        <div class="card">Lines<strong id="lines">0</strong></div>
+      </aside>
+    </div>
+    <div class="controls" aria-label="Game controls">
+      <button data-action="left" aria-label="Move left">←</button>
+      <button data-action="down" aria-label="Soft drop">↓</button>
+      <button data-action="right" aria-label="Move right">→</button>
+      <button data-action="turn" aria-label="Rotate clockwise">↻</button>
+      <button data-action="drop" aria-label="Hard drop">Drop</button>
+    </div>
+    <p class="keys">← → Move · ↓ Soft drop · ↑ / Z Rotate · Space Drop · P Pause</p>
+    <p class="gestures">Drag to move · Tap to rotate · Swipe down to drop</p>
+  </main>
+</body>
+</html>
